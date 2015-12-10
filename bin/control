@@ -12,15 +12,17 @@ function is_running() {
 }
 
 function pre-repo-archive() {
-  if [ -d ${OPENSHIFT_REPO_DIR}node_modules ]; then
-    mv -f ${OPENSHIFT_REPO_DIR}node_modules ${TMP}
+  SOURCE_DIR=$(cat $OPENSHIFT_REPO_DIR/.openshift/SOURCE_DIR)
+  if [ -d ${OPENSHIFT_REPO_DIR}SOURCE_DIRnode_modules ]; then
+    mv -f ${OPENSHIFT_REPO_DIR}SOURCE_DIRnode_modules ${TMP}
   fi
 }
 
 function build() {
   update_nodejs
   local INIT_DIR=`pwd`
-  cd ${OPENSHIFT_REPO_DIR}
+  SOURCE_DIR=$(cat $OPENSHIFT_REPO_DIR/.openshift/SOURCE_DIR)
+  cd ${OPENSHIFT_REPO_DIR}SOURCE_DIR
   if [ -d ${TMP}node_modules ]; then
     mv -f ${TMP}node_modules ./
   fi
@@ -32,7 +34,8 @@ function build() {
 
 function start() {
   local INIT_DIR=`pwd`
-  cd ${OPENSHIFT_REPO_DIR}
+  SOURCE_DIR=$(cat $OPENSHIFT_REPO_DIR/.openshift/SOURCE_DIR)
+  cd ${OPENSHIFT_REPO_DIR}SOURCE_DIR
   if is_running; then
     client_result 'Application is already running.'
   else
